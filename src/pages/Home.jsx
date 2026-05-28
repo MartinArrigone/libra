@@ -57,6 +57,7 @@ export default function Home() {
         <div style={s.headerRight}>
           <span style={s.points} onClick={() => navigate('/buy-points')} title="Comprar puntos">🌿 {profile?.points_balance ?? 0} pts</span>
           <button style={s.myBtn} onClick={() => navigate('/my-purchases')}>Mis compras</button>
+          <button style={s.myBtn} onClick={() => navigate('/alerts')}>🔔 Alertas</button>
           <button style={s.publishBtn} onClick={() => navigate('/publish')}>+ Publicar libro</button>
           <button style={s.outBtn} onClick={() => supabase.auth.signOut()}>Salir</button>
         </div>

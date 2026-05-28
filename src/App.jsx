@@ -11,6 +11,7 @@ import Purchase from './pages/Purchase'
 import MyPurchases from './pages/MyPurchases'
 import BuyPoints from './pages/BuyPoints'
 import PointsSuccess from './pages/PointsSuccess'
+import Alerts from './pages/Alerts'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -45,6 +46,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
         <Route path="/buy-points" element={session ? <BuyPoints /> : <Navigate to="/auth" />} />
         <Route path="/points-success" element={session ? <PointsSuccess /> : <Navigate to="/auth" />} />
+        <Route path="/alerts" element={session ? <Alerts /> : <Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
   )
