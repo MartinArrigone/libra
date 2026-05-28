@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
-const GENRES = ['Todos', 'Juvenile Fiction', 'Business & Economics', 'Motion picture music', 'Sin categoría']
+const GENRES = ['Todos', 'Fiction', 'Science Fiction', 'Fantasy', 'Mystery', 'Thriller', 'Romance', 'Horror', 'Biography', 'History', 'Science', 'Business & Economics', 'Drama', 'Education', 'Classic Literature', 'Humor', 'Children']
 const LANGUAGES = ['Todos', 'es', 'en', 'fr', 'de', 'pt']
 const CONDITIONS = { new: 'Nuevo', very_good: 'Muy bueno', good: 'Bueno', fair: 'Regular' }
 
@@ -78,10 +78,12 @@ export default function Home() {
             onChange={e => setSearch(e.target.value)}
           />
           <select style={s.select} value={genre} onChange={e => setGenre(e.target.value)}>
-            {GENRES.map(g => <option key={g}>{g}</option>)}
+            <option value="Todos" disabled>Género</option>
+            {GENRES.filter(g => g !== 'Todos').map(g => <option key={g} value={g}>{g}</option>)}
           </select>
           <select style={s.select} value={language} onChange={e => setLanguage(e.target.value)}>
-            {LANGUAGES.map(l => <option key={l}>{l}</option>)}
+            <option value="Todos" disabled>Idioma</option>
+            {LANGUAGES.filter(l => l !== 'Todos').map(l => <option key={l} value={l}>{l}</option>)}
           </select>
         </div>
 
