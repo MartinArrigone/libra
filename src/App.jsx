@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
 import Auth from './pages/Auth'
 import Home from './pages/Home'
+import PublishBook from './pages/PublishBook'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -21,12 +22,13 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh'}}>Cargando...</div>
+  if (loading) return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>Cargando...</div>
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/auth" element={!session ? <Auth /> : <Navigate to="/" />} />
+        <Route path="/publish" element={session ? <PublishBook /> : <Navigate to="/auth" />} />
         <Route path="/*" element={session ? <Home /> : <Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
