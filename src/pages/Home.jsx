@@ -14,6 +14,7 @@ export default function Home() {
   const [genre, setGenre] = useState('Todos')
   const [language, setLanguage] = useState('Todos')
   const [profile, setProfile] = useState(null)
+  const [hasSubscription, setHasSubscription] = useState(true)
 
   useEffect(() => {
     fetchProfile()
@@ -24,12 +25,18 @@ export default function Home() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
     setProfile(data)
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .single()
+    setHasSubscription(!!sub)
   }
 
   const fetchBooks = async () => {
     setLoading(true)
-    let query = supabase.from('books').select('*').eq('status', 'available').order('created_at', { ascending: false })
-    const { data } = await query
+    const { data } = await supabase.from('books').select('*').eq('status', 'available').order('created_at', { ascending: false })
     setBooks(data || [])
     setLoading(false)
   }
@@ -55,6 +62,14 @@ export default function Home() {
       </div>
 
       <div style={s.content}>
+        {!hasSubscription && (
+          <div style={s.banner}>
+            <span>🌿 Activá tu suscripción anual para empezar a intercambiar libros</span>
+            <button style={s.bannerBtn} onClick={() => navigate('/subscribe')}>
+              Suscribirme — 20€/año
+            </button>
+          </div>
+        )}
         <div style={s.filters}>
           <input
             style={s.search}
@@ -116,7 +131,7 @@ const s = {
   search: { flex: 1, minWidth: '200px', padding: '10px 14px', backgroundColor: '#fff', border: '1px solid #c2dfc8', borderRadius: '8px', fontSize: '14px', outline: 'none', color: '#1a3a24' },
   select: { padding: '10px 14px', backgroundColor: '#fff', border: '1px solid #c2dfc8', borderRadius: '8px', fontSize: '14px', color: '#2d6a3f', outline: 'none', cursor: 'pointer' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' },
-  card: { backgroundColor: '#fff', border: '1px solid #d4e6d4', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer', transition: 'transform 0.1s' },
+  card: { backgroundColor: '#fff', border: '1px solid #d4e6d4', borderRadius: '12px', overflow: 'hidden', display: 'flex', flexDirection: 'column', cursor: 'pointer' },
   cover: { width: '100%', height: '200px', objectFit: 'cover' },
   noCover: { width: '100%', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f7f1', fontSize: '40px' },
   cardBody: { padding: '12px', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 },
@@ -127,4 +142,6 @@ const s = {
   pts: { fontSize: '14px', fontWeight: '500', color: '#2d6a3f' },
   rating: { fontSize: '11px', color: '#7aaa88', marginTop: '2px' },
   empty: { textAlign: 'center', color: '#7aaa88', marginTop: '60px', fontSize: '15px' },
+  banner: { backgroundColor: '#f0f7f1', border: '1px solid #c2dfc8', borderRadius: '10px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', fontSize: '14px', color: '#2d6a3f', flexWrap: 'wrap', gap: '12px' },
+  bannerBtn: { padding: '8px 18px', backgroundColor: '#2d6a3f', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '500', whiteSpace: 'nowrap' },
 }

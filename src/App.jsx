@@ -5,6 +5,7 @@ import Auth from './pages/Auth'
 import Home from './pages/Home'
 import PublishBook from './pages/PublishBook'
 import BookDetail from './pages/BookDetail'
+import Subscribe from './pages/Subscribe'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -32,6 +33,7 @@ function App() {
         <Route path="/publish" element={session ? <PublishBook /> : <Navigate to="/auth" />} />
         <Route path="/*" element={session ? <Home /> : <Navigate to="/auth" />} />
         <Route path="/book/:id" element={session ? <BookDetail /> : <Navigate to="/auth" />} />
+        <Route path="/subscribe" element={session ? <Subscribe /> : <Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
   )
