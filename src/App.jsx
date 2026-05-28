@@ -9,6 +9,8 @@ import Subscribe from './pages/Subscribe'
 import Success from './pages/Success'
 import Purchase from './pages/Purchase'
 import MyPurchases from './pages/MyPurchases'
+import BuyPoints from './pages/BuyPoints'
+import PointsSuccess from './pages/PointsSuccess'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -41,6 +43,8 @@ function App() {
         <Route path="/my-purchases" element={session ? <MyPurchases /> : <Navigate to="/auth" />} />
         <Route path="/" element={session ? <Home /> : <Navigate to="/auth" />} />
         <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/buy-points" element={session ? <BuyPoints /> : <Navigate to="/auth" />} />
+        <Route path="/points-success" element={session ? <PointsSuccess /> : <Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
   )

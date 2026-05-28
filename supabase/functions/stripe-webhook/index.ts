@@ -12,37 +12,41 @@ Deno.serve(async (req) => {
     if (body.type === 'checkout.session.completed') {
       const session = body.data.object
       const userId = session.metadata?.userId
-      const sessionId = session.id
+      const type = session.metadata?.type
 
       if (!userId) return new Response('No userId', { status: 400 })
 
-      // Verificar si ya procesamos este session_id
-      const { data: existing } = await supabase
-        .from('subscriptions')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('status', 'active')
-        .maybeSingle()
+      if (type === 'points_purchase') {
+        const points = parseInt(session.metadata?.points ?? '0')
+        if (points > 0) {
+          await supabase.rpc('add_points', { user_id_input: userId, points_input: points })
+          await supabase.from('points_purchases').insert({
+            user_id: userId,
+            points_amount: points,
+            eur_paid: session.amount_total / 100,
+            stripe_payment_id: session.id,
+          })
+        }
+      } else {
+        const { data: existing } = await supabase
+          .from('subscriptions')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('status', 'active')
+          .maybeSingle()
 
-      if (existing) {
-        return new Response(JSON.stringify({ received: true, skipped: true }), {
-          headers: { 'Content-Type': 'application/json' }
-        })
+        if (!existing) {
+          await supabase.from('subscriptions').insert({
+            user_id: userId,
+            stripe_customer_id: session.customer,
+            stripe_subscription_id: session.id,
+            status: 'active',
+            start_date: new Date().toISOString(),
+            end_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+          })
+          await supabase.rpc('add_points', { user_id_input: userId, points_input: 20 })
+        }
       }
-
-      await supabase.from('subscriptions').insert({
-        user_id: userId,
-        stripe_customer_id: session.customer,
-        stripe_subscription_id: sessionId,
-        status: 'active',
-        start_date: new Date().toISOString(),
-        end_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-      })
-
-      await supabase.rpc('add_points', {
-        user_id_input: userId,
-        points_input: 20
-      })
     }
 
     return new Response(JSON.stringify({ received: true }), {
