@@ -25,13 +25,13 @@ export default function Home() {
     const { data: { user } } = await supabase.auth.getUser()
     const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
     setProfile(data)
-    const { data: sub } = await supabase
-      .from('subscriptions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('status', 'active')
-      .single()
-    setHasSubscription(!!sub)
+  const { data: sub } = await supabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .maybeSingle()
+  setHasSubscription(!!sub)
   }
 
   const fetchBooks = async () => {
