@@ -4,6 +4,7 @@ import { supabase } from './lib/supabase'
 import Auth from './pages/Auth'
 import Home from './pages/Home'
 import PublishBook from './pages/PublishBook'
+import BookDetail from './pages/BookDetail'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -30,6 +31,7 @@ function App() {
         <Route path="/auth" element={!session ? <Auth /> : <Navigate to="/" />} />
         <Route path="/publish" element={session ? <PublishBook /> : <Navigate to="/auth" />} />
         <Route path="/*" element={session ? <Home /> : <Navigate to="/auth" />} />
+        <Route path="/book/:id" element={session ? <BookDetail /> : <Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>
   )

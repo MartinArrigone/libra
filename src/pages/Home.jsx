@@ -77,7 +77,7 @@ export default function Home() {
         ) : (
           <div style={s.grid}>
             {filtered.map(book => (
-              <div key={book.id} style={s.card}>
+              <div key={book.id} style={s.card} onClick={() => navigate(`/book/${book.id}`)}>
                 {book.cover_url
                   ? <img src={book.cover_url} alt={book.title} style={s.cover} />
                   : <div style={s.noCover}>📚</div>
