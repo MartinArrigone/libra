@@ -34,13 +34,13 @@ export default function MyPurchases() {
 
     const { data: p } = await supabase
       .from('transactions')
-      .select('*, books(*)')
+      .select(`*, books (id, title, author, cover_url, condition, genre)`)
       .eq('buyer_id', user.id)
       .order('created_at', { ascending: false })
 
     const { data: s } = await supabase
       .from('transactions')
-      .select('*, books(*)')
+      .select(`*, books (id, title, author, cover_url, condition, genre)`)
       .eq('seller_id', user.id)
       .order('created_at', { ascending: false })
 
@@ -54,7 +54,6 @@ export default function MyPurchases() {
       .from('transactions')
       .update({ status: 'confirmed', confirmed_at: new Date().toISOString() })
       .eq('id', transactionId)
-
     await supabase.rpc('add_points', { user_id_input: sellerId, points_input: points })
     await fetchTransactions()
   }
@@ -64,7 +63,6 @@ export default function MyPurchases() {
       .from('transactions')
       .update({ status: 'shipped' })
       .eq('id', transactionId)
-
     await fetchTransactions()
   }
 
