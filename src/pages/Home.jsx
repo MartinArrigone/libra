@@ -56,6 +56,7 @@ export default function Home() {
         <span style={s.logo}>LIBRA</span>
         <div style={s.headerRight}>
           <span style={s.points}>🌿 {profile?.points_balance ?? 0} pts</span>
+          <button style={s.myBtn} onClick={() => navigate('/my-purchases')}>Mis compras</button>
           <button style={s.publishBtn} onClick={() => navigate('/publish')}>+ Publicar libro</button>
           <button style={s.outBtn} onClick={() => supabase.auth.signOut()}>Salir</button>
         </div>
@@ -146,4 +147,5 @@ const s = {
   empty: { textAlign: 'center', color: '#7aaa88', marginTop: '60px', fontSize: '15px' },
   banner: { backgroundColor: '#f0f7f1', border: '1px solid #c2dfc8', borderRadius: '10px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', fontSize: '14px', color: '#2d6a3f', flexWrap: 'wrap', gap: '12px' },
   bannerBtn: { padding: '8px 18px', backgroundColor: '#2d6a3f', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: '500', whiteSpace: 'nowrap' },
+  myBtn: { padding: '8px 16px', backgroundColor: '#f0f7f1', color: '#2d6a3f', border: '1px solid #c2dfc8', borderRadius: '8px', cursor: 'pointer', fontSize: '13px' },
 }

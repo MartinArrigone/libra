@@ -93,11 +93,11 @@ export default function BookDetail() {
                   </p>
                 )}
                 <button
-                  style={canBuy ? s.buyBtn : s.buyBtnDisabled}
-                  disabled={!canBuy}
-                  onClick={() => alert('Flujo de compra próximamente')}
+                    style={canBuy ? s.buyBtn : s.buyBtnDisabled}
+                    disabled={!canBuy}
+                    onClick={() => navigate('/purchase', { state: { book } })}
                 >
-                  Canjear por {book.points_price} pts
+                    Canjear por {book.points_price} pts
                 </button>
               </div>
             )}
