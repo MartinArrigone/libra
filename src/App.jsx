@@ -1,0 +1,36 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { supabase } from './lib/supabase'
+import Auth from './pages/Auth'
+import Home from './pages/Home'
+
+function App() {
+  const [session, setSession] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  if (loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh'}}>Cargando...</div>
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/auth" element={!session ? <Auth /> : <Navigate to="/" />} />
+        <Route path="/*" element={session ? <Home /> : <Navigate to="/auth" />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default App
